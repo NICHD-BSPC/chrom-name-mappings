@@ -94,9 +94,9 @@ if __name__ == '__main__':
     ap.add_argument('--nsamples', type=int, help='''Number of samples to take from each
                     chromosome, default is %(default)s''', default=3)
     ap.add_argument('--filterout', type=str, nargs='+', help='''String for filtering out chromosomes with a particular
-                    regular expression pattern, default is %(default)s''', default=None)
+                    regular expression pattern, default is %(default)s''')
     ap.add_argument('--filterin', type=str, nargs='+', help='''Strings for keeping in chromosomes with a particular
-                    regular expression pattern, default is %(default)s''', default=None)
+                    regular expression pattern, default is %(default)s''')
     ap.add_argument('--output', help='''Output file to create. Default is to
                     write to stdout.''')
     ap.add_argument('--out_a_not_b', help='''Output file a_not_b to create, default is %(default)s''',
@@ -120,7 +120,7 @@ if __name__ == '__main__':
     out_f1_d = {}
     fil_f1_d = {}
 
-    if args.filterin[0] != 'None' and args.filterin[0] != None:
+    if args.filterin is not None:
         regex_in = re.compile(r'|'.join(args.filterin))
         for i in f1_d.keys():
             match = regex_in.search(f1_d[i])
@@ -131,7 +131,7 @@ if __name__ == '__main__':
         f1_d = fil_f1_d
 
     fil_f1_d = {}
-    if args.filterout[0] != 'None' and args.filterin[0] != None:
+    if args.filterout is not None:
         regex_out = re.compile('|'.join(args.filterout))
         for i in f1_d.keys():
             match = regex_out.search(f1_d[i])
