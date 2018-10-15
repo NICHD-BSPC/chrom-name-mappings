@@ -64,13 +64,31 @@ def get_unzipfiles(wc):
     file_b = f'mappings/{wc.organism}/{wc.label}/unzipped/{wc.label}_ref_{name_b}.fa'
     return (file_a, file_b)
 
+rule map_ids:
+    input:
         get_unzipfiles
     output:
-        #temp('mappings/{organism}/{label}/unziped/')
-        'mappings/{organism}/{label}/unziped/'
+        'mappings/{organism}/{label}/mappings_{label}.tsv'
     run:
-        shell("gunzip -c {params[0][0]} > {params[1][0]}")
-        shell("gunzip -c {params[0][1]} > {params[1][1]}")
+        base = output[0].replace('.tsv', '')
+        name_a = config['references'][wildcards.organism][wildcards.label]['args']['from']
+        name_b = config['references'][wildcards.organism][wildcards.label]['args']['to']
+
+        a_not_b = f'{base}_{name_a}_not_{name_b}.tsv'
+        b_not_a = f'{base}_{name_a}_not_{name_b}.tsv'
+
+        filtered = f'{base}_filtered_out.tsv'
+
+        shell(
+            "python3 "
+            "fasta-id-matcher-master/fasta-id-matcher.py "
+            "{input[0]} "
+            "{input[1]} "
+            "--out_a_not_b {a_not_b} "
+            "--out_b_not_a {b_not_a} "
+            "--output {output} "
+        )
+
 
 
 rule map_ensembl_to_ucsc:
