@@ -5,25 +5,34 @@ references:
   test:
 
     fasta1_to_fasta2:
-      - fasta1: 'test-data/fasta1.fa.gz'
-      - fasta2: 'test-data/fasta2.tar.gz'
-      - args:
-          #format: None    or    ['mitochondrion_genome', 'rDNA']
+      fastas:
+        fasta1:
+          url: 'test-data/fasta1.fa.gz'
+          filterin: None
           filterout: None
-          filterin: None
 
-    fasta1-broken_to_fasta2:
-      - fasta1-broken: 'test-data/fasta1-broken.fa.gz'
-      - fasta2: 'test-data/fasta2.tar.gz'
-      - args:
-          #format: None    or    ['mitochondrion_genome', 'rDNA']
-          filterout: ['1', '2']
+        fasta2:
+          url: 'test-data/fasta2.fa.gz'
           filterin: None
+          filterout: None
 
-    fasta1_to_fasta2-filtered:
-      - fasta1: 'test-data/fasta1.fa.gz'
-      - fasta2: 'test-data/fasta2.tar.gz'
-      - args:
+      args:
+        from: 'fasta1'
+        to: 'fasta2'
           #format: None    or    ['mitochondrion_genome', 'rDNA']
-          filterout: ['mitochondrion_genome']
-          filterin: ['1', '2']
+
+#    fasta1-broken_to_fasta2:
+#      - fasta1-broken: 'test-data/fasta1-broken.fa.gz'
+#      - fasta2: 'test-data/fasta2.tar.gz'
+#      - args:
+#          #format: None    or    ['mitochondrion_genome', 'rDNA']
+#          filterout: ['1', '2']
+#          filterin: None
+#
+#    fasta1_to_fasta2-filtered:
+#      - fasta1: 'test-data/fasta1.fa.gz'
+#      - fasta2: 'test-data/fasta2.tar.gz'
+#      - args:
+#          #format: None    or    ['mitochondrion_genome', 'rDNA']
+#          filterout: ['mitochondrion_genome']
+#          filterin: ['1', '2']
