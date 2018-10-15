@@ -10,9 +10,8 @@ import pandas
 from snakemake.utils import makedirs
 
 
-config.update(yaml.load(open('config/test-config.yaml')))
-
-# reads that config, and for each pair of URLs downloads, does the fasta ID matching, and writes out the mappings file
+# reads that config, and for each pair of URLs downloads, does the fasta ID
+# matching, and writes out the mappings file
 # print(config['references']['BDGP6_to_UCSC_dm6'])
 
 targets = []
