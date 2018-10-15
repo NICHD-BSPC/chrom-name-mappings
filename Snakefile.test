@@ -9,12 +9,6 @@ import yaml
 import pandas
 from snakemake.utils import makedirs
 
-
-# reads that config, and for each pair of URLs downloads, does the fasta ID
-# matching, and writes out the mappings file
-# print(config['references']['BDGP6_to_UCSC_dm6'])
-
-
 targets = []
 for organism in config['references']:
     for label in config['references'][organism]:
@@ -24,7 +18,6 @@ for organism in config['references']:
 
 rule all:
      input: targets
-
 
 
 rule download_refs:
@@ -88,37 +81,3 @@ rule map_ids:
             "--out_b_not_a {b_not_a} "
             "--output {output} "
         )
-
-
-
-rule map_ensembl_to_ucsc:
-    """ Map chromosome names from Ensembl to UCSC reference
-    """
-    input:
-        rules.unzip.output
-    params:
-        get_unzipfiles
-    output:
-        'mappings/{organism}/{label}/map/'
-    run:
-        mapping = 'mappings/'+wildcards.organism+'/'+wildcards.label+'/map/mappings_'+wildcards.label+'.tsv'
-        a_not_b = ('mappings/'+wildcards.organism+'/'+wildcards.label+'/map/'
-            +list(config['references'][wildcards.organism][wildcards.label][0].keys())[0]+'_not_'
-            +list(config['references'][wildcards.organism][wildcards.label][1].keys())[0]+'.tsv')
-        b_not_a = ('mappings/'+wildcards.organism+'/'+wildcards.label+'/map/'
-            +list(config['references'][wildcards.organism][wildcards.label][1].keys())[0]+'_not_'
-            +list(config['references'][wildcards.organism][wildcards.label][0].keys())[0]+'.tsv')
-        filtered = 'mappings/'+wildcards.organism+'/'+wildcards.label+'/map/filtered_out.tsv'
-        filterout = config['references'][wildcards.organism][wildcards.label][2]['args']['filterout']
-        filterin = config['references'][wildcards.organism][wildcards.label][2]['args']['filterin']
-
-        shell("python3 fasta-id-matcher-master/fasta-id-matcher.py {params[0][0]} {params[0][1]} --filterout {filterout} --filterin {filterin} --output {mapping} --out_a_not_b {a_not_b} --out_b_not_a {b_not_a} --out_filtered {filtered}")
-        if os.stat(a_not_b).st_size != 0:
-            with open(a_not_b,'rt') as tmp:
-                linelist = 'Chromosome(s) "'
-                for line in tmp:
-                    linelist = linelist + str(line) + '\t'
-            raise ValueError(
-                '{label}: {linelist}" from {a} not found in {b}'
-                .format(label=wildcards.label, linelist=linelist, a=list(config['references'][wildcards.organism][wildcards.label][0].keys())[0],
-                b=list(config['references'][wildcards.organism][wildcards.label][1].keys())[0]))
