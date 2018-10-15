@@ -26,20 +26,6 @@ rule all:
      input: targets
 
 
-def get_fastas(wildcards):
-    url_a = list(config['references'][wildcards.organism][wildcards.label][0].values())[0]
-    url_b = list(config['references'][wildcards.organism][wildcards.label][1].values())[0]
-    return (url_a, url_b)
-
-def get_gzfiles(wildcards):
-    gzfile_a = 'mappings/'+wildcards.organism+'/'+wildcards.label+'/gz/'+wildcards.label+'_ref_' + list(config['references'][wildcards.organism][wildcards.label][0].keys())[0] + '.gz'
-    gzfile_b = 'mappings/'+wildcards.organism+'/'+wildcards.label+'/gz/'+wildcards.label+'_ref_' + list(config['references'][wildcards.organism][wildcards.label][1].keys())[0] + '.gz'
-    return (gzfile_a, gzfile_b)
-
-def get_unzipfiles(wildcards):
-    file_a = 'mappings/'+wildcards.organism+'/'+wildcards.label+'/unziped/'+wildcards.label+'_ref_' + list(config['references'][wildcards.organism][wildcards.label][0].keys())[0] + '.fa'
-    file_b = 'mappings/'+wildcards.organism+'/'+wildcards.label+'/unziped/'+wildcards.label+'_ref_' + list(config['references'][wildcards.organism][wildcards.label][1].keys())[0] + '.fa'
-    return (file_a, file_b)
 
 rule download_refs:
     """ Download urls for each pair of Ensembl / UCSC references
@@ -70,6 +56,13 @@ rule unzip:
         rules.download_refs.output
     params:
         get_gzfiles,
+def get_unzipfiles(wc):
+    name_a = config['references'][wc.organism][wc.label]['args']['from']
+    name_b = config['references'][wc.organism][wc.label]['args']['to']
+    file_a = f'mappings/{wc.organism}/{wc.label}/unzipped/{wc.label}_ref_{name_a}.fa'
+    file_b = f'mappings/{wc.organism}/{wc.label}/unzipped/{wc.label}_ref_{name_b}.fa'
+    return (file_a, file_b)
+
         get_unzipfiles
     output:
         #temp('mappings/{organism}/{label}/unziped/')
