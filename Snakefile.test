@@ -30,23 +30,20 @@ rule all:
 rule download_refs:
     """ Download urls for each pair of Ensembl / UCSC references
     """
-    params:
-        get_fastas,
-        get_gzfiles
     output:
-        #temp('mappings/{organism}/{label}/gz/')
-        'mappings/{organism}/{label}/gz/'
+        'mappings/{organism}/{label}/gz/{label}_ref_{name}.fa.gz',
     run:
-        shell("cp {params[0][0]} {params[1][0]}")
-        shell("tar -xOz -f {params[0][1]} | gzip > {params[1][1]}")
-        # if params[0][0].endswith("tar.gz") == True:
-        #     shell("wget -qO- {params[0][0]} | tar -xOz | gzip > {params[1][0]}")
-        # else:
-        #     shell("wget {params[0][0]} -O {params[1][0]}")
-        # if params[0][1].endswith("tar.gz") == True:
-        #     shell("wget -qO- {params[0][1]} | tar -xOz | gzip > {params[1][1]}")
-        # else:
-        #     shell("wget {params[0][1]} -O {params[1][1]}")
+        url = (
+            config['references'][wildcards.organism][wildcards.label]
+            ['fastas'][wildcards.name]['url']
+        )
+        if url.startswith(('http://', 'https://', 'ftp://')):
+            if url.endswith('.tar.gz'):
+                shell('wget -qO- {url} | tar -xOz | gzip -c > {output}')
+            else:
+                shell('wget -qO- {url} > {output}')
+        else:
+            shell('cp {url} {output}')
 
 
 rule unzip:
