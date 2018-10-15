@@ -1,0 +1,71 @@
+# urls for reference genomes from Ensembl and from UCSC
+
+references:
+
+  fly:
+
+    ensembl_BDGP6_to_ucsc_dm6:
+      - ensembl: 'ftp://ftp.ensembl.org/pub/release-94/fasta/drosophila_melanogaster/dna/Drosophila_melanogaster.BDGP6.dna.toplevel.fa.gz'
+      - ucsc: 'ftp://hgdownload.soe.ucsc.edu/goldenPath/dm6/bigZips/dm6.fa.gz'
+      - args:
+          #format: None    or    ['mitochondrion_genome', 'rDNA']
+          filterout: ['mitochondrion_genome']
+          filterin: None
+
+  chicken:
+
+    ensembl_Gallus_gallus-5.0_to_ucsc_galGal5:
+      - ensembl: 'ftp://ftp.ensembl.org/pub/release-94/fasta/gallus_gallus/dna/Gallus_gallus.Gallus_gallus-5.0.dna_sm.toplevel.fa.gz'
+      - ucsc: 'ftp://hgdownload.soe.ucsc.edu/goldenPath/galGal5/bigZips/galGal5.fa.gz'
+      - args:
+          #format: None    or    ['mitochondrion_genome', 'rDNA']
+          filterout: None
+          filterin: None
+
+  human:
+
+    ensembl_GRCh38.p12_to_ucsc_hg38:
+      - ensembl: 'ftp://ftp.ensembl.org/pub/release-94/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna_sm.toplevel.fa.gz'
+      - ucsc: 'ftp://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/hg38.chromFa.tar.gz'
+      - args:
+          #format: None    or    ['mitochondrion_genome', 'rDNA']
+          filterout: 'CHR'
+          filterin: None
+
+  mouse:
+
+    GRCm38.p6_to_UCSC_mm10:
+      - ensembl: 'ftp://ftp.ensembl.org/pub/release-94/fasta/mus_musculus/dna/Mus_musculus.GRCm38.dna.primary_assembly.fa.gz'
+      - ucsc: 'ftp://hgdownload.soe.ucsc.edu/goldenPath/mm10/bigZips/chromFa.tar.gz'
+      - args:
+          #format: None    or    ['mitochondrion_genome', 'rDNA']
+          filterout: None
+          filterin: None
+
+  zebrafish:
+
+    ensembl_GRCz11_to_ucsc_danRer11:
+      - ensembl: 'ftp://ftp.ensembl.org/pub/release-94/fasta/danio_rerio/dna/Danio_rerio.GRCz11.dna_sm.primary_assembly.fa.gz'
+      - ucsc: 'ftp://hgdownload.soe.ucsc.edu/goldenPath/danRer11/bigZips/danRer11.fa.gz'
+      - args:
+          #format: None    or    ['mitochondrion_genome', 'rDNA']
+          filterout: None
+          filterin: None
+
+  rat:
+
+    ucsc_rn6_to_ensembl_Rnor_6.0:
+      - ucsc: 'ftp://hgdownload.soe.ucsc.edu/goldenPath/rn6/bigZips/rn6.fa.gz'
+      - ensembl: 'ftp://ftp.ensembl.org/pub/release-94/fasta/rattus_norvegicus/dna/Rattus_norvegicus.Rnor_6.0.dna.toplevel.fa.gz'
+      - args:
+          #format: None    or    ['mitochondrion_genome', 'rDNA']
+          filterout: None
+          filterin: None
+
+    ensembl_Rnor_6.0_to_ucsc_rn6:
+      - ensembl: 'ftp://ftp.ensembl.org/pub/release-94/fasta/rattus_norvegicus/dna/Rattus_norvegicus.Rnor_6.0.dna.toplevel.fa.gz'
+      - ucsc: 'ftp://hgdownload.soe.ucsc.edu/goldenPath/rn6/bigZips/rn6.fa.gz'
+      - args:
+          #format: None    or    ['mitochondrion_genome', 'rDNA']
+          filterout: None
+          filterin: None
