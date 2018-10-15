@@ -14,19 +14,13 @@ from snakemake.utils import makedirs
 # matching, and writes out the mappings file
 # print(config['references']['BDGP6_to_UCSC_dm6'])
 
+
 targets = []
 for organism in config['references']:
     for label in config['references'][organism]:
-        list_of_fastas = config['references'][organism][label]
-        aname = list(list_of_fastas[0].keys())[0]
-        bname = list(list_of_fastas[1].keys())[0]
-        targets.extend(
-            [
-                f'mappings/{organism}/{label}/gz/',
-                f'mappings/{organism}/{label}/unziped/',
-                f'mappings/{organism}/{label}/map/'
-            ]
-        )
+        for name in config['references'][organism][label]['fastas']:
+            targets.append(f'mappings/{organism}/{label}/mappings_{label}.tsv')
+
 
 rule all:
      input: targets
