@@ -51,8 +51,12 @@ rule unzip:
     """
     input:
         rules.download_refs.output
-    params:
-        get_gzfiles,
+    output:
+        'mappings/{organism}/{label}/unzipped/{label}_ref_{name}.fa',
+    run:
+        shell("gunzip -c {input} > {output}")
+
+
 def get_unzipfiles(wc):
     name_a = config['references'][wc.organism][wc.label]['args']['from']
     name_b = config['references'][wc.organism][wc.label]['args']['to']
