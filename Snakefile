@@ -26,8 +26,9 @@ rule all:
 rule download_refs:
     """ Download urls for each pair of fasta1 / fasta2 references
     """
+    resources: wget_limit = 1
     output:
-        'mappings/{organism}/{label}/gz/{label}_ref_{name}.fa.gz'
+        temp('mappings/{organism}/{label}/gz/{label}_ref_{name}.fa.gz')
     run:
         url = (
             config['references'][wildcards.organism][wildcards.label]
@@ -51,7 +52,7 @@ rule unzip:
     input:
         rules.download_refs.output
     output:
-        'mappings/{organism}/{label}/unzipped/{label}_ref_{name}.fa'
+        temp('mappings/{organism}/{label}/unzipped/{label}_ref_{name}.fa')
     shell:
         'gunzip -c {input} > {output}'
 
