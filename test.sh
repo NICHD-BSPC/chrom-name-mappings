@@ -1,2 +1,2 @@
 set -e
-snakemake --snakefile Snakefile.test
+snakemake --snakefile Snakefile --configfile=config/test-config.yaml
