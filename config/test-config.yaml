@@ -1,29 +1,48 @@
-# urls for reference genomes from Ensembl and from UCSC
+# urls for reference genomes
 
 references:
 
   test:
 
     fasta1_to_fasta2:
-      - fasta1: 'test-data/fasta1.fa.gz'
-      - fasta2: 'test-data/fasta2.tar.gz'
-      - args:
-          #format: None    or    ['mitochondrion_genome', 'rDNA']
-          filterout: None
+      fastas:
+        fasta1:
+          url: 'test-data/fasta1.fa.gz'
           filterin: None
+          filterout: None
+        fasta2:
+          url: 'test-data/fasta2.tar.gz'
+          filterin: None
+          filterout: 'UNK'
+      args:
+          from: 'fasta1'
+          to: 'fasta2'
+
 
     fasta1-broken_to_fasta2:
-      - fasta1-broken: 'test-data/fasta1-broken.fa.gz'
-      - fasta2: 'test-data/fasta2.tar.gz'
-      - args:
-          #format: None    or    ['mitochondrion_genome', 'rDNA']
-          filterout: ['1', '2']
+      fastas:
+        fasta1:
+          url: 'test-data/fasta1-broken.fa.gz'
           filterin: None
+          filterout: ['1\ dna', '2\ dna']
+        fasta2:
+          url: 'test-data/fasta2.tar.gz'
+          filterin: None
+          filterout: ['UNK', 'chr1', 'CHR2']
+      args:
+          from: 'fasta1'
+          to: 'fasta2'
 
     fasta1_to_fasta2-filtered:
-      - fasta1: 'test-data/fasta1.fa.gz'
-      - fasta2: 'test-data/fasta2.tar.gz'
-      - args:
-          #format: None    or    ['mitochondrion_genome', 'rDNA']
-          filterout: ['mitochondrion_genome']
-          filterin: ['1', '2']
+      fastas:
+        fasta1:
+          url: 'test-data/fasta1.fa.gz'
+          filterin: ['1\ dna', '2\ dna']
+          filterout: None
+        fasta2:
+          url: 'test-data/fasta2.tar.gz'
+          filterin: None
+          filterout: ['UNK', '3\ dna', 'MIT']
+      args:
+          from: 'fasta1'
+          to: 'fasta2'
