@@ -4,7 +4,7 @@ references:
 
   fly:
 
-    ensembl_BDGP6_to_ucsc_dm6:
+    flybase_r6.23_BDGP6_to_ucsc_dm6:
       fastas:
         ensembl:
           url: 'ftp://ftp.flybase.net/genomes/Drosophila_melanogaster/dmel_r6.23_FB2018_04/fasta/dmel-all-chromosome-r6.23.fasta.gz'
@@ -39,7 +39,8 @@ references:
     ensembl_GRCh38.p12_to_ucsc_hg38:
       fastas:
         ensembl:
-          url: 'ftp://ftp.ensembl.org/pub/release-94/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna_sm.toplevel.fa.gz'
+          # url: 'ftp://ftp.ensembl.org/pub/release-94/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna_sm.toplevel.fa.gz'
+          url: 'ftp://ftp.ensembl.org/pub/release-94/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa.gz'
           filterin: None
           filterout: 'REF'
         ucsc:
