@@ -80,6 +80,6 @@ Chromosomes from one assembly that cannot be mapped to the other assembly are in
 
 The output file `log_number_mismatch` reports mismatches between the number of chromosomes in an assembly and the number of mapped chromosome names + the filtered out chromosomes. This can be due to 2 or more identical chromosomes in an assembly. In this case, only one of the identical chromosomes will be reported in the mapping table.
 
-The DAG of jobs looks like this:
+The DAG of jobs looks like this: 
 
 ![DAG_chrom-name-mapings](/dag.svg)
