@@ -54,17 +54,17 @@ references:
   organism:
     label:
       fastas:
-        fasta1:
+        assembly1:
           url: 'url/to/reference/genome/fasta1.gz'
           filterin: None
           filterout: None
-        fasta2:
+        assembly2:
           url: 'url/to/reference/genome/fasta1.gz'
           filterin: None
           filterout: None
       args:
-          from: 'fasta1'
-          to: 'fasta2'
+          from: 'assembly1'
+          to: 'assembly2'
 ```
 The code accepts paths to archives .gz or .tar.gz as urls.
 
@@ -75,6 +75,10 @@ The argument `filterin` takes a regular expression, a list, or a file containing
 The argument `filterout` takes a regular expression, a list, or a file containing regular expression, to discard from the mapping to chromosome names containing the regular expression(s).
 
 When both `filterin` and `filterout` arguments are indicated, the chromosome names will be filtered first according to `filterin` then `filterout`.
+
+Chromosomes from one assembly that cannot be mapped to the other assembly are indicated in the output file `mappings_{label}_{assembly1}_not_{assembly2}.txt`. It is recommended to add the unmapped chromosomes to the `filterout` parameter before running the workflow again.
+
+The output file `log_number_mismatch` reports mismatches between the number of chromosomes in an assembly and the number of mapped chromosome names + the filtered out chromosomes. This can be due to 2 or more identical chromosomes in an assembly. In this case, only one of the identical chromosomes will be reported in the mapping table.
 
 The DAG of jobs looks like this:
 
