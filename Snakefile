@@ -48,26 +48,18 @@ rule download_refs:
                 shell('cp {url} {output}')
 
 
-rule unzip:
-    """Unzip files
+rule unzip_and_grepheaders:
+    """Unzip files and
+    Output headers from  fasta file
     """
     input:
         rules.download_refs.output
     output:
-        'mappings/{organism}/{label}/unzipped/{label}_ref_{name}.fa'
-    shell:
-        'gunzip -c {input} > {output}'
-
-
-rule grep_headers:
-    """ Output headers from  fasta file
-    """
-    input:
-        rules.unzip.output
-    output:
+        'mappings/{organism}/{label}/unzipped/{label}_ref_{name}.fa',
         'mappings/{organism}/{label}/{label}_headers_{name}.txt'
-    shell:
-        'grep ">" {input} > {output}'
+    run:
+        shell('gunzip -c {input} > {output[0]}')
+        shell('grep ">" {output[0]} > {output[1]}')
 
 
 def get_unzipfiles(wildcards):
@@ -155,20 +147,21 @@ rule map_ids:
         if check_line_sum(organism, label, names['name_a'], output[0], names['filtered_a']) != 0:
             with open('log_number_mismatch.txt', "a") as fout:
                 fout.write(
-                'datetime.now()\nNumber of lines in {name_a} {label} does not match sum of mapped + filtered out; {i} missing\n'
+                '{date}\nNumber of lines in {name_a} {label} does not match sum of mapped + filtered out; {i} missing\n'
                 .format(name_a = names['name_a'], label = label,
-                i = check_line_sum(organism, label, names['name_a'], output[0], names['filtered_a']))
+                i = check_line_sum(organism, label, names['name_a'], output[0], names['filtered_a']),
+                date = datetime.now())
                 )
 
         if check_line_sum(organism, label, names['name_b'], output[0], names['filtered_b']) != 0:
             with open('log_number_mismatch.txt', "a") as fout:
                 fout.write(
-                'datetime.now()\nNumber of lines in {name_b} {label} does not match sum of mapped + filtered out; {i} missing\n'
+                '{date}\nNumber of lines in {name_b} {label} does not match sum of mapped + filtered out; {i} missing\n'
                 .format(name_b = names['name_b'], label = label,
-                i = check_line_sum(organism, label, names['name_b'], output[0], names['filtered_b']))
+                i = check_line_sum(organism, label, names['name_b'], output[0], names['filtered_b']),
+                date = datetime.now())
                 )
         # cleanout empty output files
         for f in (names['a_not_b'], names['b_not_a'], names['filtered_a'], names['filtered_b']):
-            print(os.stat(f).st_size)
             if os.stat(f).st_size == 0:
                 shell('rm {f}')
