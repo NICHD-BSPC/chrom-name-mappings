@@ -8,6 +8,7 @@ import gzip
 import yaml
 import pandas
 from snakemake.utils import makedirs
+from datetime import datetime
 
 
 targets = []
@@ -19,6 +20,7 @@ for organism in config['references']:
             targets.append(f'mappings/{organism}/{label}/{label}_headers_{name}.txt')
 
 
+
 rule all:
      input: targets
 
@@ -28,7 +30,7 @@ rule download_refs:
     """
     resources: wget_limit = 1
     output:
-        temp('mappings/{organism}/{label}/gz/{label}_ref_{name}.fa.gz')
+        'mappings/{organism}/{label}/gz/{label}_ref_{name}.fa.gz'
     run:
         url = (
             config['references'][wildcards.organism][wildcards.label]
@@ -52,7 +54,7 @@ rule unzip:
     input:
         rules.download_refs.output
     output:
-        temp('mappings/{organism}/{label}/unzipped/{label}_ref_{name}.fa')
+        'mappings/{organism}/{label}/unzipped/{label}_ref_{name}.fa'
     shell:
         'gunzip -c {input} > {output}'
 
@@ -85,6 +87,27 @@ def get_filter_params(organism, label, name, filter):
         fil = item
     return fil
 
+def get_names(output, organism, label):
+    names = {}
+    names['base'] = output.replace('.tsv','')
+    names['name_a'] = config['references'][organism][label]['args']['from']
+    names['name_b'] = config['references'][organism][label]['args']['to']
+    names['a_not_b'] = f'{names["base"]}_{names["name_a"]}_not_{names["name_b"]}.txt'
+    names['b_not_a'] = f'{names["base"]}_{names["name_b"]}_not_{names["name_a"]}.txt'
+    names['filtered_a'] = f'{names["base"]}_filtered_out_{names["name_a"]}.txt'
+    names['filtered_b'] = f'{names["base"]}_filtered_out_{names["name_b"]}.txt'
+    names['filterin_a'] = get_filter_params(organism, label, names['name_a'], 'filterin')
+    names['filterout_a'] = get_filter_params(organism, label, names['name_a'], 'filterout')
+    names['filterin_b'] = get_filter_params(organism, label, names['name_b'], 'filterin')
+    names['filterout_b'] = get_filter_params(organism, label, names['name_b'], 'filterout')
+    return names
+
+def check_line_sum(organism, label, name, mapping, filtered):
+    headers_line = sum(1 for line in open(f'mappings/{organism}/{label}/{label}_headers_{name}.txt'))
+    mappings_line = sum(1 for line in open(mapping))
+    filtered_line = sum(1 for line in open(filtered))
+    return (headers_line - mappings_line - filtered_line)
+
 
 rule map_ids:
     """ Map chromosome names from fasta1 to fasta2 reference
@@ -94,43 +117,30 @@ rule map_ids:
     output:
         'mappings/{organism}/{label}/mappings_{label}.tsv'
     run:
-        base = output[0].replace('.tsv','')
-        name_a = config['references'][wildcards.organism][wildcards.label]['args']['from']
-        name_b = config['references'][wildcards.organism][wildcards.label]['args']['to']
-        a_not_b = f'{base}_{name_a}_not_{name_b}.txt'
-        b_not_a = f'{base}_{name_b}_not_{name_a}.txt'
-        filtered_a = f'{base}_filtered_out_{name_a}.txt'
-        filtered_b = f'{base}_filtered_out_{name_b}.txt'
-        organism = wildcards.organism
-        label = wildcards.label
-        filterin_a = get_filter_params(organism, label, name_a, 'filterin')
-        filterout_a = get_filter_params(organism, label, name_a, 'filterout')
-        filterin_b = get_filter_params(organism, label, name_b, 'filterin')
-        filterout_b = get_filter_params(organism, label, name_b, 'filterout')
-
+        names = get_names(output[0], wildcards.organism, wildcards.label)
         shell(
             "python3 fasta-id-matcher-master/fasta-id-matcher.py "
             "{input[0]} "
             "{input[1]} "
-            "--filterin_a {filterin_a} "
-            "--filterout_a {filterout_a} "
-            "--filterin_b {filterin_b} "
-            "--filterout_b {filterout_b} "
+            "--filterin_a {names[filterin_a]} "
+            "--filterout_a {names[filterout_a]} "
+            "--filterin_b {names[filterin_b]} "
+            "--filterout_b {names[filterout_b]} "
             "--output {output} "
-            "--out_a_not_b {a_not_b} "
-            "--out_b_not_a {b_not_a} "
-            "--out_filtered_a {filtered_a} "
-            "--out_filtered_b {filtered_b} "
+            "--out_a_not_b {names[a_not_b]} "
+            "--out_b_not_a {names[b_not_a]} "
+            "--out_filtered_a {names[filtered_a]} "
+            "--out_filtered_b {names[filtered_b]} "
             )
 
-
-        if os.stat(a_not_b).st_size != 0 or os.stat(b_not_a).st_size != 0:
+        # checks for chromosome name in one assembly non-matching or absent from the other assembly
+        if os.stat(names['a_not_b']).st_size != 0 or os.stat(names['b_not_a']).st_size != 0:
             linelist_a =[]
             linelist_b = []
-            with open(a_not_b,'rt') as tmp:
+            with open(names['a_not_b'],'rt') as tmp:
                 for line in tmp:
                     linelist_a.append(line)
-            with open(b_not_a,'rt') as tmp:
+            with open(names['b_not_a'],'rt') as tmp:
                 for line in tmp:
                     linelist_b.append(line)
             raise ValueError(
@@ -139,3 +149,26 @@ rule map_ids:
                 a=config['references'][wildcards.organism][wildcards.label]['args']['from'],
                 b=config['references'][wildcards.organism][wildcards.label]['args']['to'])
                 )
+
+        # calculate if the number of chromosome names in the fasta files match
+        # the number of chromosome names mapped + filtered out
+        if check_line_sum(organism, label, names['name_a'], output[0], names['filtered_a']) != 0:
+            with open('log_number_mismatch.txt', "a") as fout:
+                fout.write(
+                'datetime.now()\nNumber of lines in {name_a} {label} does not match sum of mapped + filtered out; {i} missing\n'
+                .format(name_a = names['name_a'], label = label,
+                i = check_line_sum(organism, label, names['name_a'], output[0], names['filtered_a']))
+                )
+
+        if check_line_sum(organism, label, names['name_b'], output[0], names['filtered_b']) != 0:
+            with open('log_number_mismatch.txt', "a") as fout:
+                fout.write(
+                'datetime.now()\nNumber of lines in {name_b} {label} does not match sum of mapped + filtered out; {i} missing\n'
+                .format(name_b = names['name_b'], label = label,
+                i = check_line_sum(organism, label, names['name_b'], output[0], names['filtered_b']))
+                )
+        # cleanout empty output files
+        for f in (names['a_not_b'], names['b_not_a'], names['filtered_a'], names['filtered_b']):
+            print(os.stat(f).st_size)
+            if os.stat(f).st_size == 0:
+                shell('rm {f}')
