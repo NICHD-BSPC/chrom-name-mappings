@@ -9,13 +9,11 @@ import hashlib
 
 usage = """
 Maps chromosome names from one fasta to the chromosome names of another.
-Matches are identified by the combination of length and three 25-mers,
-converted to uppercase and randomly sampled from across the sequence. The
-number and size of random samples can be adjusted.
-Mapped chromosomes are reported to stdout as TSV.
+Matches are identified by the full chromosome sequence converted
+to uppercase. Mapped chromosomes are reported to stdout as TSV.
 Any chromosomes unique to one fasta are reported to the two files, "a_not_b"
-and "b_not_a", which will appear in the current directory (TODO: need better
-names, better places, expose this to CLI)
+and "b_not_a", which will appear in the current directory (TODO: expose this
+to CLI)
 NOTE: this is intended to be used with FASTA files from the same assembly,
 ideally with the same exact sequences but with different chromosome labels. It
 will not work to match up chromosome IDs across different assemblies (UCSC hg19
@@ -25,16 +23,17 @@ and GENCODE hg38, for example).
 
 
 def construct_dict(fastarec, filterin, filterout):
-    """ Build dictionaries where keys are hexdigest of md5sum (containing
-    randomly-sampled sequences) and values are the chromosome ID from which
-    the sequences came that passed 'filternames'.
-    If a key tuples exist, update the key to be the hashlib.md5 hexdigest of the
-    full chromosome sequence
+    """ Build dictionaries where keys are hexdigest of md5sum and values are
+    the chromosome ID from which the sequences came that passed 'filternames'.
+    If an md5sum already exists, raise an error.
+    Parameters
     ----------
     fastarec : pyfaidx.FastaRecord
         Fasta record from assembly, generated with function `Fasta`
-    out_fasta_head : list
-        List of chromosome names filtered out
+    filterin : list
+        List of chromosome names to be filtered in
+    filterout : list
+        List of chromosome names to be filtered out
     Returns
     -------
     Dictionary `fasta_d` where keys are hexdigest of md5sum and values are the
