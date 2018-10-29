@@ -144,21 +144,21 @@ rule map_ids:
 
         # calculate if the number of chromosome names in the fasta files match
         # the number of chromosome names mapped + filtered out
-        if check_line_sum(organism, label, names['name_a'], output[0], names['filtered_a']) != 0:
+        if check_line_sum(wildcards.organism, wildcards.label, names['name_a'], output[0], names['filtered_a']) != 0:
             with open('log_number_mismatch.txt', "a") as fout:
                 fout.write(
                 '{date}\nNumber of lines in {name_a} {label} does not match sum of mapped + filtered out; {i} missing\n'
-                .format(name_a = names['name_a'], label = label,
-                i = check_line_sum(organism, label, names['name_a'], output[0], names['filtered_a']),
+                .format(name_a = names['name_a'], label = wildcards.label,
+                i = check_line_sum(wildcards.organism, wildcards.label, names['name_a'], output[0], names['filtered_a']),
                 date = datetime.now())
                 )
 
-        if check_line_sum(organism, label, names['name_b'], output[0], names['filtered_b']) != 0:
+        if check_line_sum(wildcards.organism, wildcards.label, names['name_b'], output[0], names['filtered_b']) != 0:
             with open('log_number_mismatch.txt', "a") as fout:
                 fout.write(
                 '{date}\nNumber of lines in {name_b} {label} does not match sum of mapped + filtered out; {i} missing\n'
-                .format(name_b = names['name_b'], label = label,
-                i = check_line_sum(organism, label, names['name_b'], output[0], names['filtered_b']),
+                .format(name_b = names['name_b'], label = wildcards.label,
+                i = check_line_sum(wildcards.organism, wildcards.label, names['name_b'], output[0], names['filtered_b']),
                 date = datetime.now())
                 )
         # cleanout empty output files
