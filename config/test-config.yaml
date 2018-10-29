@@ -1,0 +1,48 @@
+# urls for reference genomes
+
+references:
+
+  test:
+
+    fasta1_to_fasta2:
+      fastas:
+        fasta1:
+          url: 'test-data/fasta1.fa.gz'
+          filterin: None
+          filterout: None
+        fasta2:
+          url: 'test-data/fasta2.tar.gz'
+          filterin: None
+          filterout: 'UNK'
+      args:
+          from: 'fasta1'
+          to: 'fasta2'
+
+
+    fasta1-broken_to_fasta2:
+      fastas:
+        fasta1:
+          url: 'test-data/fasta1-broken.fa.gz'
+          filterin: None
+          filterout: ['1\ dna', '2\ dna']
+        fasta2:
+          url: 'test-data/fasta2.tar.gz'
+          filterin: None
+          filterout: ['UNK', 'chr1', 'CHR2']
+      args:
+          from: 'fasta1'
+          to: 'fasta2'
+
+    fasta1_to_fasta2-filtered:
+      fastas:
+        fasta1:
+          url: 'test-data/fasta1.fa.gz'
+          filterin: ['1\ dna', '2\ dna']
+          filterout: None
+        fasta2:
+          url: 'test-data/fasta2.tar.gz'
+          filterin: None
+          filterout: ['UNK', '3\ dna', 'MIT']
+      args:
+          from: 'fasta1'
+          to: 'fasta2'
