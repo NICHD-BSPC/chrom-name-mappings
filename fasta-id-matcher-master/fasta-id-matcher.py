@@ -5,6 +5,7 @@ import argparse
 import random
 from pyfaidx import Fasta
 import re
+import hashlib
 
 usage = """
 Maps chromosome names from one fasta to the chromosome names of another.
@@ -22,59 +23,39 @@ and GENCODE hg38, for example).
 """
 
 
-def sample(rec, sample_size):
-    """
-    Randomly sample from a record.
-    Parameters
+
+def construct_dict(fastarec, filterin, filterout):
+    """ Build dictionaries where keys are hexdigest of md5sum (containing
+    randomly-sampled sequences) and values are the chromosome ID from which
+    the sequences came that passed 'filternames'.
+    If a key tuples exist, update the key to be the hashlib.md5 hexdigest of the
+    full chromosome sequence
     ----------
-    rec : pyfaidx.FastaRecord
-    sample_size : int
-        Randomly sample a sequence of this length from the record
+    fastarec : pyfaidx.FastaRecord
+        Fasta record from assembly, generated with function `Fasta`
+    out_fasta_head : list
+        List of chromosome names filtered out
     Returns
     -------
-    Randomly-sampled sequence of length `sample_size` as a string.
+    Dictionary `fasta_d` where keys are hexdigest of md5sum and values are the
+    chromosome IDs, and the list of chromosome names filtered out `out_fasta_head`
     """
-
-    s = len(rec)
-
-    # Even for very small seqs or large sample_size, going negative is OK.
-    start = random.randint(0, s - sample_size - 1)
-    seq = rec[start:start + sample_size]
-    seq = seq.seq.upper()
-    return seq
-
-
-def gen_key(rec, nsamples=3, sample_size=25):
-    """
-    Returns a tuple of randomly-sampled sequences from `rec`.
-    Parameters
-    ----------
-    rec : pyfaidx.FastaRecord
-    nsamples : int
-        Number of random samples to take
-    Returns
-    -------
-    A tuple of length nsamples + 1 of the form (len(rec), seq1, ... seqN) where
-    seq1 thru seqN are sequences of length `sample_size` and there are
-    `nsamples` sequences.
-    """
-
-    # The first cut for deciding if chroms are equivalent is that they have the
-    # same length. If that's true, then we want to sample at similar locations
-    # across them (that is, the same sequence provided as input to two
-    # different calls of this function). So we set the seed to the chrom
-    # length.
-    s = len(rec)
-    random.seed(s)
-
-    key = [s]
-    for _ in range(nsamples):
-        key.append(sample(rec, sample_size))
-
-    return tuple(key)
+    fasta_d = {}
+    out_fasta_head = []
+    for r in fastarec:
+        (keep, out_fasta_head) = filternames(filterin, filterout, r.name, out_fasta_head)
+        tmp_key = hashlib.md5(str(r).upper().encode()).hexdigest()
+        if keep and tmp_key not in fasta_d.keys():
+            fasta_d[tmp_key] = r.name
+        elif keep and tmp_key in fasta_d.keys():
+            raise ValueError(
+                '{rname}\n and \n{fdtmpkey}\n have identical sequences\n'
+                .format(rname=r.name, fdtmpkey=fasta_d[tmp_key]
+                ))
+    return (fasta_d, out_fasta_head)
 
 
-def filter(filterin, filterout, fasta_d):
+def filternames(filterin, filterout, name, out_fasta_head):
     """
     Filters in or out according to the list of regular expressions
     in --filterin or --filterout
@@ -84,34 +65,35 @@ def filter(filterin, filterout, fasta_d):
         Regular expression(s) to limit the chromosome names to
     filterout : args.filterout_a or args_filterout_b
         Regular expression(s) to filter out from the chromosome names
+    name : str
+        Chromosome name ot screen
+    out_fasta_head : list
+        List of chromosome names filtered out
     Returns
     -------
-    The updated fasta dictionary after filtering in and/or out the
-    regular expressions, and the dictionary of filtered out chromosome names
+    True or False for keeping this chromosome name, and the updated list
+    of filtered out chromosome names
     """
-    out_fasta_d = {}
-    fil_fasta_d = {}
     if filterin is not None and filterin[0] != 'None':
         regex_in = re.compile(r'|'.join(filterin))
-        for i in fasta_d.keys():
-            match = regex_in.search(fasta_d[i])
-            if match:
-                fil_fasta_d[i] = fasta_d[i]
-            else:
-                out_fasta_d[i] = fasta_d[i]
-        fasta_d = fil_fasta_d
-
-    fil_fasta_d = {}
+        match = regex_in.search(name)
+        if match:
+            in_keep = True
+        else:
+            in_keep = False
+            out_fasta_head.append(name)
+    else: in_keep = True
     if filterout is not None and filterout[0] != 'None':
         regex_out = re.compile('|'.join(filterout))
-        for i in fasta_d.keys():
-            match = regex_out.search(fasta_d[i])
-            if match is None:
-                fil_fasta_d[i] = fasta_d[i]
-            else:
-                out_fasta_d[i] = fasta_d[i]
-        fasta_d = fil_fasta_d
-    return(fasta_d, out_fasta_d)
+        match = regex_out.search(name)
+        if match is None:
+            out_keep = True
+        else:
+            out_keep = False
+            out_fasta_head.append(name)
+    else: out_keep = True
+
+    return(in_keep and out_keep, out_fasta_head)
 
 
 def difference(f1_d, f2_d, out_f1_d, out_f2_d):
@@ -124,10 +106,10 @@ def difference(f1_d, f2_d, out_f1_d, out_f2_d):
         Dictionary for first fasta, chromosome names as values
     f2_d : dict
         Dictionary for second fasta, chromosome names as values
-    out_f1_d : dict
-        Dictionary of filtered out chromosomes, from first fasta
-    out_f2_d : dict
-        Dictionary of filtered out chromosomes, from second fasta
+    out_f1_head : list
+        Dictionary of filtered out chromosomes from first fasta
+    out_f2_head : list
+        List of filtered out chromosomes from second fasta
     Returns
     -------
     The dictionaries of chromosome names found in one fasta and not the other
@@ -137,13 +119,13 @@ def difference(f1_d, f2_d, out_f1_d, out_f2_d):
         f1_d[i]
         for i in set(list(f1_d.keys())).difference(list(f2_d.keys()))
     ]
-    f1_not_f2_not_out = list(set(f1_not_f2) - set(list(out_f1_d.values())))
+    f1_not_f2_not_out = list(set(f1_not_f2) - set(list(out_f1_head)))
 
     f2_not_f1 = [
         f2_d[i]
         for i in set(list(f2_d.keys())).difference(list(f1_d.keys()))
     ]
-    f2_not_f1_not_out = list(set(f2_not_f1) - set(list(out_f2_d.values())))
+    f2_not_f1_not_out = list(set(f2_not_f1) - set(list(out_f2_head)))
     return(f1_not_f2_not_out, f2_not_f1_not_out)
 
 
@@ -178,23 +160,18 @@ if __name__ == '__main__':
     f1 = Fasta(args.f1, read_long_names=True)
     f2 = Fasta(args.f2, read_long_names=True)
 
-    # Build dictionaries where keys are tuples from `gen_key()` (containing
-    # randomly-sampled sequences) and values are the chromosome ID from which
-    # the sequences came.
-    f1_d = {gen_key(r, nsamples=args.nsamples, sample_size=args.samplesize): r.name for r in f1}
-    f2_d = {gen_key(r, nsamples=args.nsamples, sample_size=args.samplesize): r.name for r in f2}
 
+    # Build dictionaries where keys are tuples (containing randomly-sampled
+    # sequences) and values are the chromosome ID from which the sequences
+    # came that passed 'filternames'.
+    (f1_d, out_f1_head) = construct_dict(f1, args.filterin_a, args.filterout_a)
+    (f2_d, out_f2_head) = construct_dict(f2, args.filterin_b, args.filterout_b)
 
     # Removes the > from fasta headers in the f1_d and f2_d dictionaries, coming from empty lines in the fastas
     for i in f1_d.keys():
         f1_d[i] = f1_d[i].lstrip(">")
     for i in f2_d.keys():
         f2_d[i] = f2_d[i].lstrip(">")
-
-    # Filters chromosome names in or out according to the list of
-    # regular expressions in --filterin or --filterout
-    (f1_d, out_f1_d) = filter(args.filterin_a, args.filterout_a, f1_d)
-    (f2_d, out_f2_d) = filter(args.filterin_b, args.filterout_b, f2_d)
 
     # Same key in both dicts mean randomly-sampled sequences match . . . and we
     # have a mapping between chromosomes.
@@ -207,7 +184,7 @@ if __name__ == '__main__':
             print('{0}\t{1}'.format(f1_d[k].split(' ')[0], f2_d[k].split(' ')[0]), file=out)
 
     # Otherwise, figure out the differences and report to stderr.
-    f1_not_f2_not_out, f2_not_f1_not_out = difference(f1_d, f2_d, out_f1_d, out_f2_d)
+    f1_not_f2_not_out, f2_not_f1_not_out = difference(f1_d, f2_d, out_f1_head, out_f2_head)
 
     with open(args.out_a_not_b, 'w') as fout:
         if f1_not_f2_not_out:
@@ -218,9 +195,9 @@ if __name__ == '__main__':
             fout.write('\n'.join(f2_not_f1_not_out) + '\n')
 
     with open(args.out_filtered_a, 'w') as fout:
-        if out_f1_d:
-            fout.write('\n'.join(out_f1_d.values()) + '\n')
+        if out_f1_head:
+            fout.write('\n'.join(out_f1_head) + '\n')
 
     with open(args.out_filtered_b, 'w') as fout:
-        if out_f2_d:
-            fout.write('\n'.join(out_f2_d.values()) + '\n')
+        if out_f2_head:
+            fout.write('\n'.join(out_f2_head) + '\n')
