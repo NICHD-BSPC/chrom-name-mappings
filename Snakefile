@@ -111,7 +111,7 @@ rule map_ids:
     run:
         names = get_names(output[0], wildcards.organism, wildcards.label)
         shell(
-            "python3 fasta-id-matcher-master/fasta-id-matcher.py "
+            "python3 fasta-id-matcher-master/fasta_id_matcher.py "
             "{input[0]} "
             "{input[1]} "
             "--filterin_a {names[filterin_a]} "
