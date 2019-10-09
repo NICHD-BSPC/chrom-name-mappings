@@ -1,7 +1,7 @@
 # chrom-name-mappings
 Automated workflow for matching chromosome names between genome assemblies.
 
-This worflow attempts to match the chromosomes names from two reference genome fasta files by comparing the size of chromosomes and randomly sampling the fasta sequences to identify matches. It returns a .tsv table of matched pairs of chromosome names, along with text files containing the lists of filtered-out chromosome names and non-matching chromosome names, if applicable.
+This worflow attempts to match the chromosomes names from two reference genome fasta files by comparing the full chromosomes  sequences between fastas to identify matches. It returns a .tsv table of matched pairs of chromosome names, along with text files containing the lists of filtered-out chromosome names and non-matching chromosome names, if applicable.
 
 ## Software installation
 
@@ -54,17 +54,17 @@ references:
   organism:
     label:
       fastas:
-        fasta1:
+        assembly1:
           url: 'url/to/reference/genome/fasta1.gz'
           filterin: None
           filterout: None
-        fasta2:
+        assembly2:
           url: 'url/to/reference/genome/fasta1.gz'
           filterin: None
           filterout: None
       args:
-          from: 'fasta1'
-          to: 'fasta2'
+          from: 'assembly1'
+          to: 'assembly2'
 ```
 The code accepts paths to archives .gz or .tar.gz as urls.
 
@@ -74,7 +74,11 @@ The argument `filterin` takes a regular expression, a list, or a file containing
 
 The argument `filterout` takes a regular expression, a list, or a file containing regular expression, to discard from the mapping to chromosome names containing the regular expression(s).
 
-When both `filterin` and `filterout` arguments are indicated, the chromosome names will be filtered first according to `filterin` then `filterout`.
+When both `filterin` and `filterout` arguments are indicated, the chromosome names will be included only when there are being both filtered in and not filtered out.
+
+Chromosomes from one assembly that cannot be mapped to the other assembly are indicated in the output file `mappings_{label}_{assembly1}_not_{assembly2}.txt`. It is recommended to add the unmapped chromosomes to the `filterout` parameter before running the workflow again.
+
+The output file `log_number_mismatch` reports mismatches between the number of chromosomes in an assembly and the number of mapped chromosome names + the filtered out chromosomes. This can be due to 2 or more identical chromosomes in an assembly. In this case, only one of the identical chromosomes will be reported in the mapping table.
 
 The DAG of jobs looks like this:
 

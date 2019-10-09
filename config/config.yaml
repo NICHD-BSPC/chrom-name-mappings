@@ -38,7 +38,7 @@ references:
 
     gencode_GRCh38.28_to_ucsc_hg38:
       fastas:
-        ensembl:
+        gencode:
           url: 'ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_28/GRCh38.primary_assembly.genome.fa.gz'
           filterin: None
           filterout: None
@@ -47,14 +47,14 @@ references:
           filterin: None
           filterout: '_alt'
       args:
-          from: 'ensembl'
+          from: 'gencode'
           to: 'ucsc'
 
   mouse:
 
     gencode_GRCm38.m18_to_ucsc_mm10:
       fastas:
-        ensembl:
+        gencode:
           url: 'ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M18/GRCm38.primary_assembly.genome.fa.gz'
           filterin: None
           filterout: None
@@ -63,7 +63,7 @@ references:
           filterin: None
           filterout: None
       args:
-          from: 'ensembl'
+          from: 'gencode'
           to: 'ucsc'
 
   zebrafish:
@@ -89,7 +89,7 @@ references:
         ensembl:
           url: 'ftp://ftp.ensembl.org/pub/release-94/fasta/rattus_norvegicus/dna/Rattus_norvegicus.Rnor_6.0.dna.toplevel.fa.gz'
           filterin: None
-          filterout: None
+          filterout: ['AABR07022993.1', 'AABR07022518.1']
         ucsc:
           url: 'ftp://hgdownload.soe.ucsc.edu/goldenPath/rn6/bigZips/rn6.fa.gz'
           filterin: None
@@ -97,7 +97,6 @@ references:
       args:
           from: 'ensembl'
           to: 'ucsc'
-
 
   cerevisiae:
 
