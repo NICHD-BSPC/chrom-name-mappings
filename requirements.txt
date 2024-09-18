@@ -1,5 +1,0 @@
-python >=3.6
-pandas
-snakemake =4.4.0
-pyfaidx
-biopython
