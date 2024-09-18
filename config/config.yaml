@@ -11,12 +11,12 @@ references:
           filterin: None
           filterout: None
         ucsc:
-          url: 'ftp://hgdownload.soe.ucsc.edu/goldenPath/dm6/bigZips/dm6.fa.gz'
+          url: 'https://hgdownload.soe.ucsc.edu/goldenPath/dm6/bigZips/dm6.fa.gz'
           filterin: None
           filterout: None
       args:
-          from: 'flybase'
-          to: 'ucsc'
+        from: 'flybase'
+        to: 'ucsc'
 
   chicken:
 
@@ -27,12 +27,12 @@ references:
           filterin: None
           filterout: None
         ucsc:
-          url: 'ftp://hgdownload.soe.ucsc.edu/goldenPath/galGal5/bigZips/galGal5.fa.gz'
+          url: 'https://hgdownload.soe.ucsc.edu/goldenPath/galGal5/bigZips/galGal5.fa.gz'
           filterin: None
           filterout: None
       args:
-          from: 'ensembl'
-          to: 'ucsc'
+        from: 'ensembl'
+        to: 'ucsc'
 
   human:
 
@@ -43,12 +43,12 @@ references:
           filterin: None
           filterout: None
         ucsc:
-          url: 'ftp://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/hg38.chromFa.tar.gz'
+          url: 'https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/hg38.chromFa.tar.gz'
           filterin: None
           filterout: '_alt'
       args:
-          from: 'gencode'
-          to: 'ucsc'
+        from: 'gencode'
+        to: 'ucsc'
 
   mouse:
 
@@ -59,12 +59,12 @@ references:
           filterin: None
           filterout: None
         ucsc:
-          url: 'ftp://hgdownload.soe.ucsc.edu/goldenPath/mm10/bigZips/chromFa.tar.gz'
+          url: 'https://hgdownload.soe.ucsc.edu/goldenPath/mm10/bigZips/chromFa.tar.gz'
           filterin: None
           filterout: None
       args:
-          from: 'gencode'
-          to: 'ucsc'
+        from: 'gencode'
+        to: 'ucsc'
 
   zebrafish:
 
@@ -75,12 +75,12 @@ references:
           filterin: None
           filterout: None
         ucsc:
-          url: 'ftp://hgdownload.soe.ucsc.edu/goldenPath/danRer11/bigZips/danRer11.fa.gz'
+          url: 'https://hgdownload.soe.ucsc.edu/goldenPath/danRer11/bigZips/danRer11.fa.gz'
           filterin: None
           filterout: '_alt'
       args:
-          from: 'ensembl'
-          to: 'ucsc'
+        from: 'ensembl'
+        to: 'ucsc'
 
   rat:
 
@@ -91,12 +91,12 @@ references:
           filterin: None
           filterout: ['AABR07022993.1', 'AABR07022518.1']
         ucsc:
-          url: 'ftp://hgdownload.soe.ucsc.edu/goldenPath/rn6/bigZips/rn6.fa.gz'
+          url: 'https://hgdownload.soe.ucsc.edu/goldenPath/rn6/bigZips/rn6.fa.gz'
           filterin: None
           filterout: None
       args:
-          from: 'ensembl'
-          to: 'ucsc'
+        from: 'ensembl'
+        to: 'ucsc'
 
   cerevisiae:
 
@@ -107,12 +107,12 @@ references:
           filterin: None
           filterout: None
         ucsc:
-          url: 'ftp://hgdownload.soe.ucsc.edu/goldenPath/sacCer3/bigZips/chromFa.tar.gz'
+          url: 'https://hgdownload.soe.ucsc.edu/goldenPath/sacCer3/bigZips/chromFa.tar.gz'
           filterin: None
           filterout: None
       args:
-          from: 'ensembl'
-          to: 'ucsc'
+        from: 'ensembl'
+        to: 'ucsc'
 
   macaque:
 
@@ -123,9 +123,9 @@ references:
           filterin: None
           filterout: None
         ucsc:
-          url: 'ftp://hgdownload.soe.ucsc.edu/goldenPath/rheMac10/bigZips/rheMac10.fa.gz'
+          url: 'https://hgdownload.soe.ucsc.edu/goldenPath/rheMac10/bigZips/rheMac10.fa.gz'
           filterin: None
           filterout: 'chrM'
       args:
-          from: 'ensembl'
-          to: 'ucsc'
+        from: 'ensembl'
+        to: 'ucsc'
