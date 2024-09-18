@@ -10,6 +10,7 @@ import pandas
 from snakemake.utils import makedirs
 from datetime import datetime
 
+configfile: "config/config.yaml"
 
 targets = []
 for organism in config['references']:
