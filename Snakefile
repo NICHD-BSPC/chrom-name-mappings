@@ -149,7 +149,7 @@ rule map_ids:
                 for line in tmp:
                     linelist_b.append(line)
             raise ValueError(
-                '{label}: from {a} not found in {b}:\n{linelist_a}\nfrom {b} not found in {a}:\n{linelist_b}'
+                '{label}: from {a} not found in {b}:\n{linelist_a}\nfrom {b} not found in {a}:\n{linelist_b}. Failling this step might mean a chromosome is missing from one the database, or that a chromosome is present in both databases but their sequences are not identical'
                 .format(label=wildcards.label, linelist_a=linelist_a, linelist_b=linelist_b,
                 a=config['references'][wildcards.organism][wildcards.label]['args']['from'],
                 b=config['references'][wildcards.organism][wildcards.label]['args']['to'])
