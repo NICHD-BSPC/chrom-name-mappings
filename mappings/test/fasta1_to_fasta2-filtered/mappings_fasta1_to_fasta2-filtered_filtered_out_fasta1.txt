@@ -1,0 +1,2 @@
+3 dna:chromosome chromosome:Rnor_6.0:1:1:282763074:1 REF
+mitochondrion_genome dna:chromosome chromosome:Rnor_6.0:1:1:282763074:1 REF
