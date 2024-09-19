@@ -15,8 +15,8 @@ references:
           filterin: None
           filterout: 'UNK'
       args:
-          from: 'fasta1'
-          to: 'fasta2'
+        from: 'fasta1'
+        to: 'fasta2'
 
 
     fasta1-broken_to_fasta2:
@@ -30,8 +30,8 @@ references:
           filterin: None
           filterout: ['UNK', 'chr1', 'CHR2']
       args:
-          from: 'fasta1'
-          to: 'fasta2'
+        from: 'fasta1'
+        to: 'fasta2'
 
     fasta1_to_fasta2-filtered:
       fastas:
@@ -44,5 +44,5 @@ references:
           filterin: None
           filterout: ['UNK', '3\ dna', 'MIT']
       args:
-          from: 'fasta1'
-          to: 'fasta2'
+        from: 'fasta1'
+        to: 'fasta2'
