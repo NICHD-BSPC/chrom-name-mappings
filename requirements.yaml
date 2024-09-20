@@ -2,8 +2,8 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - python >=3.12.5
+  - python >=3.8,<3.12
   - pandas
-  - snakemake >=8.20.3
+  - snakemake <8.0.0
   - pyfaidx
   - biopython
