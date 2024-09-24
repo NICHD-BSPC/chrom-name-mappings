@@ -39,6 +39,17 @@ Eventually when you’re done, you can “deactivate”, which removes the envir
 source deactivate
 ```
 
+## Running with test data
+
+Test data are included, run with:
+
+```
+set -e
+
+snakemake --snakefile Snakefile --configfile=config/test-config.yaml --resources wget_limit=2 -j 20
+```
+
+
 ## Running the workflow
 
 Example usage:
