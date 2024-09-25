@@ -1,15 +1,18 @@
 # chrom-name-mappings
 Automated workflow for matching chromosome names between genome assemblies.
 
-This worflow attempts to match the chromosomes names from two reference genome fasta files by comparing the full chromosomes  sequences between fastas to identify matches. It returns a .tsv table of matched pairs of chromosome names, along with text files containing the lists of filtered-out chromosome names and non-matching chromosome names, if applicable.
+This worflow attempts to match the chromosomes names from two reference genome fasta files by comparing the full chromosome sequences between
+fastas to identify matches. It returns a .tsv table of matched pairs of chromosome names, along with text files containing the lists of filtered-out
+chromosome names and non-matching chromosome names, if applicable.
 
 ## Software installation
 
-Installation of all dependencies is handled by conda, ensuring reproducibility, streamlined setup, and no need for root administrator privileges.
+Installation of all dependencies is handled by conda or mamba, ensuring reproducibility, streamlined setup, and no need for root administrator privileges.
 
 Use [bioconda](https://bioconda.github.io/) to automatically install software into the working directory without needing admin rights on the machine.
 
-If you have the Anaconda Python distribution, you already have conda. Otherwise, install [Miniconda](https://conda.io/miniconda.html).
+If you have the Anaconda Python distribution, you already have conda. Otherwise, install [Miniconda](https://conda.io/miniconda.html) or
+[Mamba](https://mamba.readthedocs.io/en/latest/index.html).
 
 ### 1. Clone the git repo
 
@@ -21,20 +24,31 @@ cd my-project-dir
 
 ### 2. Create a new conda environment
 
-Create a top-level environment with Snakemake and other requirements. It needs to be activated any time you’ll be working with these workflows.
+Create a local environment in your project directory with Snakemake and other requirements. It needs to be activated any time you’ll be working with these workflows.
 ```
-conda create -n chrom-name-mappings --file requirements.txt --channel bioconda --channel conda-forge
+mamba env create -p env --file requirements.yaml
 ```
 
-Then activate the environment:
+Then navigate to your project directory and activate the environment:
 ```
-source activate chrom-name-mappings
+source activate env/
 ```
 
 Eventually when you’re done, you can “deactivate”, which removes the environment location from your $PATH until the next time you activate it.
 ```
 source deactivate
 ```
+
+## Running with test data
+
+Test data are included, run with the following (assuming 20 cores; adjust this value as needed):
+
+```
+set -e
+
+snakemake --snakefile Snakefile --configfile=config/test-config.yaml --resources wget_limit=2 -j 20
+```
+
 
 ## Running the workflow
 

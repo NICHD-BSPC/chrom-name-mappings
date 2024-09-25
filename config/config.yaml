@@ -11,12 +11,26 @@ references:
           filterin: None
           filterout: None
         ucsc:
-          url: 'ftp://hgdownload.soe.ucsc.edu/goldenPath/dm6/bigZips/dm6.fa.gz'
+          url: 'https://hgdownload.soe.ucsc.edu/goldenPath/dm6/bigZips/dm6.fa.gz'
           filterin: None
           filterout: None
       args:
-          from: 'flybase'
-          to: 'ucsc'
+        from: 'flybase'
+        to: 'ucsc'
+
+    flybase_r6.59_BDGP6_to_ucsc_dm6:
+      fastas:
+        flybase:
+          url: 'ftp://ftp.flybase.net/genomes/dmel/dmel_r6.59_FB2024_04/fasta/dmel-all-chromosome-r6.59.fasta.gz'
+          filterin: None
+          filterout: None
+        ucsc:
+          url: 'https://hgdownload.soe.ucsc.edu/goldenPath/dm6/bigZips/dm6.fa.gz'
+          filterin: None
+          filterout: None
+      args:
+        from: 'flybase'
+        to: 'ucsc'
 
   chicken:
 
@@ -27,12 +41,12 @@ references:
           filterin: None
           filterout: None
         ucsc:
-          url: 'ftp://hgdownload.soe.ucsc.edu/goldenPath/galGal5/bigZips/galGal5.fa.gz'
+          url: 'https://hgdownload.soe.ucsc.edu/goldenPath/galGal5/bigZips/galGal5.fa.gz'
           filterin: None
           filterout: None
       args:
-          from: 'ensembl'
-          to: 'ucsc'
+        from: 'ensembl'
+        to: 'ucsc'
 
   human:
 
@@ -43,12 +57,27 @@ references:
           filterin: None
           filterout: None
         ucsc:
-          url: 'ftp://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/hg38.chromFa.tar.gz'
+          url: 'https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/hg38.chromFa.tar.gz'
           filterin: None
           filterout: '_alt'
       args:
-          from: 'gencode'
-          to: 'ucsc'
+        from: 'gencode'
+        to: 'ucsc'
+
+    gencode_GRCh38.46_to_ucsc_hg38:
+      fastas:
+        gencode:
+          url: 'ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_46/GRCh38.primary_assembly.genome.fa.gz'
+          filterin: None
+          filterout: None
+        ucsc:
+          url: 'https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/hg38.chromFa.tar.gz'
+          filterin: None
+          filterout: '_alt'
+      args:
+        from: 'gencode'
+        to: 'ucsc'
+
 
   mouse:
 
@@ -59,12 +88,27 @@ references:
           filterin: None
           filterout: None
         ucsc:
-          url: 'ftp://hgdownload.soe.ucsc.edu/goldenPath/mm10/bigZips/chromFa.tar.gz'
+          url: 'https://hgdownload.soe.ucsc.edu/goldenPath/mm10/bigZips/chromFa.tar.gz'
           filterin: None
           filterout: None
       args:
-          from: 'gencode'
-          to: 'ucsc'
+        from: 'gencode'
+        to: 'ucsc'
+
+    gencode_GRCm39.m35_to_ucsc_mm39:
+      fastas:
+        gencode:
+          url: 'ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M35/GRCm39.primary_assembly.genome.fa.gz'
+          filterin: None
+          filterout: None
+        ucsc:
+          url: 'https://hgdownload.soe.ucsc.edu/goldenPath/mm39/bigZips/mm39.fa.gz'
+          filterin: None
+          filterout: None
+      args:
+        from: 'gencode'
+        to: 'ucsc'
+
 
   zebrafish:
 
@@ -75,12 +119,27 @@ references:
           filterin: None
           filterout: None
         ucsc:
-          url: 'ftp://hgdownload.soe.ucsc.edu/goldenPath/danRer11/bigZips/danRer11.fa.gz'
+          url: 'https://hgdownload.soe.ucsc.edu/goldenPath/danRer11/bigZips/danRer11.fa.gz'
           filterin: None
           filterout: '_alt'
       args:
-          from: 'ensembl'
-          to: 'ucsc'
+        from: 'ensembl'
+        to: 'ucsc'
+
+    ensembl_GRCz11_112_to_ucsc_danRer11:
+      fastas:
+        ensembl:
+          url: 'ftp://ftp.ensembl.org/pub/release-112/fasta/danio_rerio/dna/Danio_rerio.GRCz11.dna_sm.primary_assembly.fa.gz'
+          filterin: None
+          filterout: None
+        ucsc:
+          url: 'https://hgdownload.soe.ucsc.edu/goldenPath/danRer11/bigZips/danRer11.fa.gz'
+          filterin: None
+          filterout: '_alt'
+      args:
+        from: 'ensembl'
+        to: 'ucsc'
+
 
   rat:
 
@@ -91,12 +150,27 @@ references:
           filterin: None
           filterout: ['AABR07022993.1', 'AABR07022518.1']
         ucsc:
-          url: 'ftp://hgdownload.soe.ucsc.edu/goldenPath/rn6/bigZips/rn6.fa.gz'
+          url: 'https://hgdownload.soe.ucsc.edu/goldenPath/rn6/bigZips/rn6.fa.gz'
           filterin: None
           filterout: None
       args:
-          from: 'ensembl'
-          to: 'ucsc'
+        from: 'ensembl'
+        to: 'ucsc'
+
+    ensembl_Rnor_7.2_to_ucsc_rn7:
+      fastas:
+        ensembl:
+          url: 'ftp://ftp.ensembl.org/pub/release-112/fasta/rattus_norvegicus/dna/Rattus_norvegicus.mRatBN7.2.dna_sm.toplevel.fa.gz'
+          filterin: None
+          filterout: ['AABR07022993.1', 'AABR07022518.1']
+        ucsc:
+          url: 'https://hgdownload.soe.ucsc.edu/goldenPath/rn7/bigZips/rn7.fa.gz'
+          filterin: None
+          filterout: None
+      args:
+        from: 'ensembl'
+        to: 'ucsc'
+
 
   cerevisiae:
 
@@ -107,12 +181,41 @@ references:
           filterin: None
           filterout: None
         ucsc:
-          url: 'ftp://hgdownload.soe.ucsc.edu/goldenPath/sacCer3/bigZips/chromFa.tar.gz'
+          url: 'https://hgdownload.soe.ucsc.edu/goldenPath/sacCer3/bigZips/chromFa.tar.gz'
           filterin: None
           filterout: None
       args:
-          from: 'ensembl'
-          to: 'ucsc'
+        from: 'ensembl'
+        to: 'ucsc'
+
+    ensembl_Scer_98_R64.1.1_to_ucsc_sacCer3:
+      fastas:
+        ensembl:
+          url: 'ftp://ftp.ensembl.org/pub/release-98/fasta/saccharomyces_cerevisiae/dna/Saccharomyces_cerevisiae.R64-1-1.dna_sm.toplevel.fa.gz'
+          filterin: None
+          filterout: None
+        ucsc:
+          url: 'https://hgdownload.soe.ucsc.edu/goldenPath/sacCer3/bigZips/chromFa.tar.gz'
+          filterin: None
+          filterout: None
+      args:
+        from: 'ensembl'
+        to: 'ucsc'
+
+    ensembl_Scer_112_R64.1.1_to_ucsc_sacCer3:
+      fastas:
+        ensembl:
+          url: 'ftp://ftp.ensembl.org/pub/release-112/fasta/saccharomyces_cerevisiae/dna/Saccharomyces_cerevisiae.R64-1-1.dna_sm.toplevel.fa.gz'
+          filterin: None
+          filterout: None
+        ucsc:
+          url: 'https://hgdownload.soe.ucsc.edu/goldenPath/sacCer3/bigZips/chromFa.tar.gz'
+          filterin: None
+          filterout: None
+      args:
+        from: 'ensembl'
+        to: 'ucsc'
+
 
   macaque:
 
@@ -123,9 +226,37 @@ references:
           filterin: None
           filterout: None
         ucsc:
-          url: 'ftp://hgdownload.soe.ucsc.edu/goldenPath/rheMac8/bigZips/rheMac8.fa.gz'
+          url: 'https://hgdownload.soe.ucsc.edu/goldenPath/rheMac8/bigZips/rheMac8.fa.gz'
           filterin: None
           filterout: None
       args:
-          from: 'ensembl'
-          to: 'ucsc'
+        from: 'ensembl'
+        to: 'ucsc'
+
+    ensembl_Mmul_10_to_ucsc_rheMac10:
+      fastas:
+        ensembl:
+          url: 'ftp://ftp.ensembl.org/pub/release-98/fasta/macaca_mulatta/dna/Macaca_mulatta.Mmul_10.dna_sm.toplevel.fa.gz'
+          filterin: None
+          filterout: None
+        ucsc:
+          url: 'https://hgdownload.soe.ucsc.edu/goldenPath/rheMac10/bigZips/rheMac10.fa.gz'
+          filterin: None
+          filterout: 'chrM'
+      args:
+        from: 'ensembl'
+        to: 'ucsc'
+
+    ensembl_Mmul_10_112_to_ucsc_rheMac10:
+      fastas:
+        ensembl:
+          url: 'ftp://ftp.ensembl.org/pub/release-112/fasta/macaca_mulatta/dna/Macaca_mulatta.Mmul_10.dna_sm.toplevel.fa.gz'
+          filterin: None
+          filterout: None
+        ucsc:
+          url: 'https://hgdownload.soe.ucsc.edu/goldenPath/rheMac10/bigZips/rheMac10.fa.gz'
+          filterin: None
+          filterout: None
+      args:
+        from: 'ensembl'
+        to: 'ucsc'
