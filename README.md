@@ -1,7 +1,7 @@
 # chrom-name-mappings
 Automated workflow for matching chromosome names between genome assemblies.
 
-This worflow attempts to match the chromosomes names from two reference genome fasta files by comparing the full chromosomes  sequences between
+This worflow attempts to match the chromosomes names from two reference genome fasta files by comparing the full chromosome sequences between
 fastas to identify matches. It returns a .tsv table of matched pairs of chromosome names, along with text files containing the lists of filtered-out
 chromosome names and non-matching chromosome names, if applicable.
 
@@ -29,7 +29,7 @@ Create a local environment in your project directory with Snakemake and other re
 mamba env create -p env --file requirements.yaml
 ```
 
-Then navigate to your prokect directory and activate the environment:
+Then navigate to your project directory and activate the environment:
 ```
 source activate env/
 ```
@@ -41,7 +41,7 @@ source deactivate
 
 ## Running with test data
 
-Test data are included, run with:
+Test data are included, run with the following (assuming 20 cores; adjust this value as needed):
 
 ```
 set -e
